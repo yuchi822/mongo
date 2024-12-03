@@ -14,9 +14,12 @@ export class UserRoute extends Route{
     }
 
     protected setRoutes(): void {
-        this.router.get(`${this.url}test`,(req, res)=>{
-            this.Contorller.test(req, res);
+        this.router.get(`${this.url}findAll`,(req, res)=>{
+            this.Contorller.findAll(req, res);
+        })
+
+        this.router.post(`${this.url}insertOne`,(req, res)=>{
+            this.Contorller.insertOne(req, res);
         })
     }
-
 }
