@@ -16,7 +16,7 @@ export class UserController extends Contorller {
 
     public async findAll(Request: Request, Response: Response) {
 
-        const res:resp<Array<DBResp<Student>>|undefined> ={
+        const res: resp<Array<DBResp<Student>> | undefined> = {
             code: 200,
             message: "",
             body: undefined
@@ -27,18 +27,15 @@ export class UserController extends Contorller {
             res.body = dbResp;
             res.message = "find sucess";
             Response.send(res);
-        }else{
+        } else {
             res.code = 500;
             res.message = "server error";
             Response.status(500).send(res);
         }
-        
+
     }
 
-    /**
-     * 新增學生
-     */
-    public async insertOne(Request: Request, Response: Response){
+    public async insertOne(Request: Request, Response: Response) {
         const resp = await this.service.insertOne(Request.body)
         Response.status(resp.code).send(resp)
     }

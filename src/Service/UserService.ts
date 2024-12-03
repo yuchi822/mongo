@@ -77,7 +77,6 @@ export class UserService extends Service {
      *  0787 四碼
      * 座號檢查，跟之前有重複就噴錯  只能寫沒重複的號碼
      */
-
     public async userNameValidator(userName: string): Promise<
     '學生名字格式不正確，應為 tku + 科系縮寫 + 四碼座號，例如: tkubm1760' | '座號已存在' | '校名必須為 tku' | '座號格式不正確，必須為四位數字。' | '驗證通過'
     > {
@@ -92,10 +91,9 @@ export class UserService extends Service {
             return '校名必須為 tku';
         }
     
-        // 驗證座號
+        // 驗證座號(正則不想寫可以給 gpt 寫, 記得測試就好)
         const seatNumberPattern = /^\d{4}$/; // 驗證4個數字
         
-        // 检查座号是否遵循四位数字格式
         if (!seatNumberPattern.test(info.seatNumber)) {
             return '座號格式不正確，必須為四位數字。';
         }
@@ -108,6 +106,11 @@ export class UserService extends Service {
         
     }
 
+    /**
+     * 用戶名格式化
+     * @param userName 用戶名
+     * @returns seatInfo
+     */
     public userNameFormator(userName: string){
         const info:seatInfo = {
             schoolName: userName.slice(0, 3),
@@ -117,6 +120,11 @@ export class UserService extends Service {
         return info
     }
 
+    /**
+     * 檢查用戶名是否存在
+     * @param SeatNumber 
+     * @returns boolean
+     */
     public async existingSeatNumbers(SeatNumber:string):Promise<boolean>{
         const students = await this.getAllStudents();
         let exist = false
