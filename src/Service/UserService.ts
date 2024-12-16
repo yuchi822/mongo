@@ -70,6 +70,119 @@ export class UserService extends Service {
     }
 
     /**
+     * 取得所有學生資料
+     * @returns students array
+     */
+    public async getAll(): Promise<resp<DBResp<Student>[]>> {
+        const resp: resp<DBResp<Student>[] | undefined> = {
+            code: 200,
+            message: "",
+            body: []
+        };
+
+        try {
+            const students = await this.getAllStudents();
+            if (students && students.length > 0) {
+                resp.body = students;
+            } else {
+                resp.message = "No students found.";
+                resp.code = 404;
+            }
+        } catch (error) {
+            resp.message = "Server error while fetching students.";
+            resp.code = 500;
+        }
+
+        return resp;
+    }
+
+    /**
+     * 根據學生ID查詢單一學生資料
+     * @param id 學生ID
+     * @returns student
+     */
+    public async getStudentById(id: string): Promise<resp<DBResp<Student> | undefined>> {
+        const resp: resp<DBResp<Student> | undefined> = {
+            code: 200,
+            message: "",
+            body: undefined
+        };
+
+        try {
+            const student = await studentsModel.findById(id);
+            if (student) {
+                resp.body = student;
+            } else {
+                resp.message = "Student not found";
+                resp.code = 404;
+            }
+        } catch (error) {
+            resp.message = "Server error while fetching student.";
+            resp.code = 500;
+        }
+
+        return resp;
+    }
+
+    /**
+     * 更新學生資料
+     * @param id 學生ID
+     * @param info 要更新的學生資料
+     * @returns response
+     */
+    public async updateStudent(id: string, info: Student): Promise<resp<DBResp<Student> | undefined>> {
+        const resp: resp<DBResp<Student> | undefined> = {
+            code: 200,
+            message: "",
+            body: undefined
+        };
+
+        try {
+            const updatedStudent = await studentsModel.findByIdAndUpdate(id, info, { new: true });
+            if (updatedStudent) {
+                resp.body = updatedStudent;
+            } else {
+                resp.message = "Student not found";
+                resp.code = 404;
+            }
+        } catch (error) {
+            resp.message = "Server error while updating student.";
+            resp.code = 500;
+        }
+
+        return resp;
+    }
+
+    /**
+     * 刪除學生資料
+     * @param id 學生ID
+     * @returns response
+     */
+    public async deleteStudent(id: string): Promise<resp<undefined>> {
+        const resp: resp<undefined> = {
+            code: 200,
+            message: "",
+            body: undefined
+        };
+
+        try {
+            const deletedStudent = await studentsModel.findByIdAndDelete(id);
+            if (deletedStudent) {
+                resp.message = "Student deleted successfully";
+            } else {
+                resp.message = "Student not found";
+                resp.code = 404;
+            }
+        } catch (error) {
+            resp.message = "Server error while deleting student.";
+            resp.code = 500;
+        }
+
+        return resp;
+    }
+
+
+    /**
      * 學生名字驗證器
      * @param userName 學生名字
      * tku ee 0787
@@ -138,5 +251,6 @@ export class UserService extends Service {
         }
         return exist
     }
+
 
 }
