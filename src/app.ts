@@ -6,7 +6,7 @@ import cors from 'cors';
 import { MongoDB } from './utils/MongoDB';
 require('dotenv').config()
 const app: express.Application = express()
-const server = http.createServer(app);
+const server = http.createServer(app); 
 
 export const DB = new MongoDB({
   name:process.env.DBUSER as string,
