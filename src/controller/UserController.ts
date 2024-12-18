@@ -40,5 +40,15 @@ export class UserController extends Contorller {
         Response.status(resp.code).send(resp)
     }
 
+    public async deleteStudent(Request: Request, Response: Response) {
+        const resp = await this.service.deleteStudent(Request.query.id as string)
+        Response.status(resp.code).send(resp)
+    }
+
+    public async updateStudent(Request: Request, Response: Response) {
+        const resp = await this.service.updateStudent(Request.body.id,Request.body.id)
+        Response.status(resp.code).send(resp)
+    }
+
 
 }
