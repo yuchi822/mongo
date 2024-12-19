@@ -74,7 +74,7 @@ export class UserService extends Service {
      * @returns students array
      */
     public async getAll(): Promise<resp<DBResp<Student>[]>> {
-        const resp: resp<DBResp<Student>[] | undefined> = {
+        const resp: resp<DBResp<Student>[]> = {
             code: 200,
             message: "",
             body: []
@@ -130,7 +130,7 @@ export class UserService extends Service {
      * @param info 要更新的學生資料
      * @returns response
      */
-    public async updateStudent(id: string, info: Student): Promise<resp<DBResp<Student> | undefined>> {
+    public async updateStudent(info:Student): Promise<resp<DBResp<Student> | undefined>> {
         const resp: resp<DBResp<Student> | undefined> = {
             code: 200,
             message: "",
@@ -138,13 +138,23 @@ export class UserService extends Service {
         };
 
         try {
-            const updatedStudent = await studentsModel.findByIdAndUpdate(id, info, { new: true });
-            if (updatedStudent) {
-                resp.body = updatedStudent;
-            } else {
-                resp.message = "Student not found";
+            // const updatedStudent = await studentsModel.findByIdAndUpdate(id, info, { new: true });
+            const user = await studentsModel.findOne({ userName: info.userName });
+            if (user) {
+                try {
+                  Object.assign(user, info);
+                  await user.save();
+                  resp.body = user;
+                  resp.message = "update success";
+                } catch (error) {
+                  resp.code = 500;
+                  resp.message = error as string;
+                }
+              } else {
                 resp.code = 404;
-            }
+                resp.message = "user not found";
+              }
+              return resp;
         } catch (error) {
             resp.message = "Server error while updating student.";
             resp.code = 500;
@@ -166,7 +176,7 @@ export class UserService extends Service {
         };
 
         try {
-            const deletedStudent = await studentsModel.findByIdAndDelete(id);
+            const deletedStudent = await studentsModel.findOne({ "_id": id });
             if (deletedStudent) {
                 resp.message = "Student deleted successfully";
             } else {

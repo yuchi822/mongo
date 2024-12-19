@@ -46,7 +46,7 @@ export class UserController extends Contorller {
     }
 
     public async updateStudent(Request: Request, Response: Response) {
-        const resp = await this.service.updateStudent(Request.body.id,Request.body.id)
+        const resp = await this.service.updateStudent(Request.body)
         Response.status(resp.code).send(resp)
     }
 
